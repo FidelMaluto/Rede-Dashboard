@@ -1,34 +1,38 @@
 const ws = new WebSocket(`ws://${location.host}`);
 
 ws.onopen = () => {
-    console.log("WebSocket conectado");
+    console.log('WebSocket conectado');
 };
 
 ws.onmessage = (event) => {
+
     const data = JSON.parse(event.data);
 
-    // hora
-    document.getElementById('time').innerText = data.time;
+    document.getElementById('serverIP').innerText = data.serverIP;
 
-    // total dispositivos
     document.getElementById('total').innerText = data.total;
 
-    // tabela
+    document.getElementById('time').innerText = data.time;
+
     const tbody = document.getElementById('devices');
+
     tbody.innerHTML = '';
 
     data.devices.forEach(device => {
-        const row = `
+
+        tbody.innerHTML += `
             <tr>
                 <td>${device.name}</td>
                 <td>${device.ip}</td>
-                <td>${device.status}</td>
+                <td>${device.mac}</td>
+                <td class="online">${device.status}</td>
             </tr>
         `;
-        tbody.innerHTML += row;
+
     });
+
 };
 
 ws.onerror = (err) => {
-    console.log("Erro WebSocket:", err);
+    console.log('Erro WebSocket:', err);
 };

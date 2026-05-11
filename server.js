@@ -1,61 +1,137 @@
 const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
+const { exec } = require('child_process');
+const os = require('os');
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-// Servir frontend
 app.use(express.static('public'));
 
-// Lista de clientes conectados
-let clients = [];
+// PEGAR IP DO SERVIDOR
 
-// Conexão WebSocket
-wss.on('connection', (ws, req) => {
+function getServerIP() {
 
-    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    ip = ip.replace('::ffff:', '');
+    const interfaces = os.networkInterfaces();
 
-    console.log('Novo dispositivo conectado:', ip);
+    for (let name in interfaces) {
 
-    // evita duplicados
-    const exists = clients.find(c => c.ip === ip);
+        for (let net of interfaces[name]) {
 
-    if (!exists) {
-        clients.push({ ip, ws });
+            if (net.family === 'IPv4' && !net.internal) {
+                return net.address;
+            }
+
+        }
+
     }
 
-    // remover quando desconectar
-    ws.on('close', () => {
-        console.log('Dispositivo saiu:', ip);
-        clients = clients.filter(c => c.ip !== ip);
+    return 'Não encontrado';
+}
+
+// ESCANEAR REDE
+
+function scanNetwork(callback) {
+
+    exec('arp -a', (err, stdout) => {
+
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        const lines = stdout.split('\n');
+
+        const devices = [];
+
+        let pending = 0;
+
+        lines.forEach((line) => {
+
+            const match = line.match(
+                /(\d+\.\d+\.\d+\.\d+)\s+([a-f0-9-]+)/i
+            );
+
+            if (match) {
+
+                const ip = match[1];
+                const mac = match[2];
+
+                pending++;
+
+                exec(`ping -a -n 1 ${ip}`, (err2, stdout2) => {
+
+                    let deviceName = 'Desconhecido';
+
+                    const nameMatch = stdout2.match(/Disparando .* \[(.*?)\]/i);
+
+                    if (nameMatch) {
+                        deviceName = nameMatch[1];
+                    }
+
+                    devices.push({
+                        name: deviceName,
+                        ip,
+                        mac,
+                        status: 'online'
+                    });
+
+                    pending--;
+
+                    if (pending === 0) {
+                        callback(devices);
+                    }
+
+                });
+
+            }
+
+        });
+
     });
+
+}
+
+// WEBSOCKET
+
+wss.on('connection', () => {
+    console.log('Novo dashboard conectado');
 });
 
-// Enviar dados em tempo real para o dashboard
+// TEMPO REAL
+
 setInterval(() => {
 
-    const data = {
-        devices: clients.map((c, index) => ({
-            name: `Dispositivo ${index + 1}`,
-            ip: c.ip,
-            status: "online"
-        })),
-        total: clients.length,
-        time: new Date().toLocaleTimeString()
-    };
+    scanNetwork((devices) => {
 
-    wss.clients.forEach(client => {
-        if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify(data));
-        }
+        const data = {
+            serverIP: getServerIP(),
+            total: devices.length,
+            time: new Date().toLocaleTimeString(),
+            devices
+        };
+
+        wss.clients.forEach(client => {
+
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(data));
+            }
+
+        });
+
     });
 
-}, 2000);
+}, 3000);
 
-// Iniciar servidor na rede
+// INICIAR SERVIDOR
+
 server.listen(3000, '0.0.0.0', () => {
-    console.log('Servidor rodando em http://0.0.0.0:3000');
+
+    console.log('==============================');
+    console.log('🚀 ISP Dashboard Rodando');
+    console.log('🌐 http://localhost:3000');
+    console.log('==============================');
+
 });

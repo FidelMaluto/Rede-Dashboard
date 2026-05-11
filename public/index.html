@@ -2,29 +2,57 @@
 <html lang="pt">
 
 <head>
+
     <meta charset="UTF-8">
-    <title>--REDE-TURMA:B--</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>- Turma B -</title>
+
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+
 </head>
 
 <body>
 
-    <h1>🌐 Dashboard de Rede</h1>
+    <h1>🌐 ISP Network Dashboard</h1>
 
-    <p>Hora: <span id="time"></span></p>
-    <p>Total de dispositivos: <span id="total"></span></p>
+    <div class="cards">
 
-    <table border="1">
+        <div class="card">
+            <h2>IP do Servidor</h2>
+            <p id="serverIP">...</p>
+        </div>
+
+        <div class="card">
+            <h2>Total Dispositivos</h2>
+            <p id="total">0</p>
+        </div>
+
+        <div class="card">
+            <h2>Hora</h2>
+            <p id="time">--:--:--</p>
+        </div>
+
+    </div>
+
+    <table>
+
         <thead>
+
             <tr>
-                <th>Nome</th>
+                <th>Dispositivo</th>
                 <th>IP</th>
+                <th>MAC Address</th>
                 <th>Status</th>
             </tr>
+
         </thead>
+
         <tbody id="devices"></tbody>
+
     </table>
+
+    <script src="script.js"></script>
 
 </body>
 

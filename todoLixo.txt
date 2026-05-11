@@ -1,0 +1,167 @@
+SERVER.JS
+const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
+
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+// Servir frontend
+app.use(express.static('public'));
+
+// Lista de clientes conectados
+let clients = [];
+
+// Conexão WebSocket
+wss.on('connection', (ws, req) => {
+
+    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    ip = ip.replace('::ffff:', '');
+
+    console.log('Novo dispositivo conectado:', ip);
+
+    // evita duplicados
+    const exists = clients.find(c => c.ip === ip);
+
+    if (!exists) {
+        clients.push({ ip, ws });
+    }
+
+    // remover quando desconectar
+    ws.on('close', () => {
+        console.log('Dispositivo saiu:', ip);
+        clients = clients.filter(c => c.ip !== ip);
+    });
+});
+
+// Enviar dados em tempo real para o dashboard
+setInterval(() => {
+
+    const data = {
+        devices: clients.map((c, index) => ({
+            name: `Dispositivo ${index + 1}`,
+            ip: c.ip,
+            status: "online"
+        })),
+        total: clients.length,
+        time: new Date().toLocaleTimeString()
+    };
+
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(data));
+        }
+    });
+
+}, 2000);
+
+// Iniciar servidor na rede
+server.listen(3000, '0.0.0.0', () => {
+    console.log('Servidor rodando em http://0.0.0.0:3000');
+});
+
+SCRIPT.JS
+const ws = new WebSocket(`ws://${location.host}`);
+
+ws.onopen = () => {
+    console.log("WebSocket conectado");
+};
+
+ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    // hora
+    document.getElementById('time').innerText = data.time;
+
+    // total dispositivos
+    document.getElementById('total').innerText = data.total;
+
+    // tabela
+    const tbody = document.getElementById('devices');
+    tbody.innerHTML = '';
+
+    data.devices.forEach(device => {
+        const row = `
+            <tr>
+                <td>${device.name}</td>
+                <td>${device.ip}</td>
+                <td>${device.status}</td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+};
+
+ws.onerror = (err) => {
+    console.log("Erro WebSocket:", err);
+};
+
+INDEX.HTML
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <title>--REDE-TURMA:B--</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <h1>🌐 Dashboard de Rede</h1>
+
+    <p>Hora: <span id="time"></span></p>
+    <p>Total de dispositivos: <span id="total"></span></p>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>IP</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="devices"></tbody>
+    </table>
+
+</body>
+
+</html>
+
+STYLE.CSS
+body {
+    font-family: Arial;
+    background: #0f172a;
+    color: #fff;
+    text-align: center;
+}
+
+h1 {
+    margin: 20px;
+}
+
+table {
+    margin: auto;
+    border-collapse: collapse;
+    width: 60%;
+}
+
+th,
+td {
+    padding: 10px;
+    border: 1px solid #333;
+}
+
+.online {
+    color: #22c55e;
+}
+
+.offline {
+    color: #ef4444;
+}
+
+.info {
+    margin-bottom: 20px;
+}
