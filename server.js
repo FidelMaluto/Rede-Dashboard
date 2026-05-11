@@ -33,66 +33,42 @@ function getServerIP() {
 
 // ESCANEAR REDE
 
-function scanNetwork(callback) {
+let devices = [];
 
-    exec('arp -a', (err, stdout) => {
+wss.on('connection', (ws, req) => {
 
-        if (err) {
-            console.log(err);
-            return;
-        }
+    let ip = req.socket.remoteAddress;
+    ip = ip.replace('::ffff:', '');
 
-        const lines = stdout.split('\n');
+    ws.on('message', (message) => {
 
-        const devices = [];
+        const data = JSON.parse(message);
 
-        let pending = 0;
+        if (data.type === 'register') {
 
-        lines.forEach((line) => {
+            const exists = devices.find(d => d.ip === ip);
 
-            const match = line.match(
-                /(\d+\.\d+\.\d+\.\d+)\s+([a-f0-9-]+)/i
-            );
+            if (!exists) {
 
-            if (match) {
-
-                const ip = match[1];
-                const mac = match[2];
-
-                pending++;
-
-                exec(`ping -a -n 1 ${ip}`, (err2, stdout2) => {
-
-                    let deviceName = 'Desconhecido';
-
-                    const nameMatch = stdout2.match(/Disparando .* \[(.*?)\]/i);
-
-                    if (nameMatch) {
-                        deviceName = nameMatch[1];
-                    }
-
-                    devices.push({
-                        name: deviceName,
-                        ip,
-                        mac,
-                        status: 'online'
-                    });
-
-                    pending--;
-
-                    if (pending === 0) {
-                        callback(devices);
-                    }
-
+                devices.push({
+                    name: data.deviceName,
+                    ip,
+                    status: 'online'
                 });
 
             }
 
-        });
+        }
 
     });
 
-}
+    ws.on('close', () => {
+
+        devices = devices.filter(d => d.ip !== ip);
+
+    });
+
+});
 
 // WEBSOCKET
 
@@ -104,26 +80,24 @@ wss.on('connection', () => {
 
 setInterval(() => {
 
-    scanNetwork((devices) => {
+    const data = {
+        serverIP: getServerIP(),
+        total: devices.length,
+        time: new Date().toLocaleTimeString(),
+        devices
+    };
 
-        const data = {
-            serverIP: getServerIP(),
-            total: devices.length,
-            time: new Date().toLocaleTimeString(),
-            devices
-        };
+    wss.clients.forEach(client => {
 
-        wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
 
-            if (client.readyState === WebSocket.OPEN) {
-                client.send(JSON.stringify(data));
-            }
+            client.send(JSON.stringify(data));
 
-        });
+        }
 
     });
 
-}, 3000);
+}, 2000);
 
 // INICIAR SERVIDOR
 

@@ -1,7 +1,35 @@
 const ws = new WebSocket(`ws://${location.host}`);
 
+function getDeviceName() {
+
+    const userAgent = navigator.userAgent;
+
+    if (/android/i.test(userAgent)) {
+        return 'Android';
+    }
+
+    if (/iphone/i.test(userAgent)) {
+        return 'iPhone';
+    }
+
+    if (/windows/i.test(userAgent)) {
+        return 'Windows PC';
+    }
+
+    if (/mac/i.test(userAgent)) {
+        return 'MacBook';
+    }
+
+    return 'Dispositivo';
+}
+
 ws.onopen = () => {
-    console.log('WebSocket conectado');
+
+    ws.send(JSON.stringify({
+        type: 'register',
+        deviceName: getDeviceName()
+    }));
+
 };
 
 ws.onmessage = (event) => {
@@ -24,15 +52,10 @@ ws.onmessage = (event) => {
             <tr>
                 <td>${device.name}</td>
                 <td>${device.ip}</td>
-                <td>${device.mac}</td>
-                <td class="online">${device.status}</td>
+                <td>${device.status}</td>
             </tr>
         `;
 
     });
 
-};
-
-ws.onerror = (err) => {
-    console.log('Erro WebSocket:', err);
 };
