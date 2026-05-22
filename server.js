@@ -60,6 +60,8 @@ wss.on('connection', (ws, req) => {
 
                     ip,
 
+                    mac: data.mac || 'N/A',
+
                     status: 'online'
 
                 });

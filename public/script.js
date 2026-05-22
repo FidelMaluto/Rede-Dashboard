@@ -19,14 +19,32 @@ function getDeviceName() {
 
 let deviceName = getDeviceName();
 
+function generateFakeMac() {
+
+    return "XX:XX:XX:XX:XX:XX"
+        .replace(/X/g, () => {
+
+            return Math.floor(
+                Math.random() * 16
+            ).toString(16);
+
+        });
+
+}
+
 // ENVIAR DADOS AO SERVIDOR
 
 ws.onopen = () => {
 
-    ws.send(JSON.stringify({
-        type: 'register',
-        deviceName
-    }));
+   ws.send(JSON.stringify({
+
+    type: 'register',
+
+    deviceName,
+
+    mac: generateFakeMac()
+
+}));
 
 };
 
@@ -173,6 +191,7 @@ ws.onmessage = (event) => {
                 <td>${device.name}</td>
 
                 <td>${device.ip}</td>
+                <td>${device.mac}</td>
 
                 <td class="online">
                     ${device.status}
