@@ -37,64 +37,73 @@ function getServerIP() {
 // ESCANEAR REDE
 
 let devices = [];
-
 wss.on('connection', (ws, req) => {
 
     let ip = req.socket.remoteAddress;
+
     ip = ip.replace('::ffff:', '');
 
     ws.on('message', (message) => {
 
         const data = JSON.parse(message);
 
+        // REGISTRAR DISPOSITIVO
         if (data.type === 'register') {
-
-            const exists = devices.find(d => d.ip === ip);
+            const exists =
+                devices.find(d => d.ip === ip);
 
             if (!exists) {
 
                 devices.push({
+
                     name: data.deviceName,
+
                     ip,
+
                     status: 'online'
+
                 });
 
             }
 
         }
 
+        // CHAT
+
         if (data.type === 'chat') {
 
-    wss.clients.forEach(client => {
+            wss.clients.forEach(client => {
 
-        if (
-            client.readyState === WebSocket.OPEN
-        ) {
+                if (
+                    client.readyState ===
+                    WebSocket.OPEN
+                ) {
 
-            client.send(JSON.stringify({
+                    client.send(JSON.stringify({
 
-                type: 'chat',
+                        type: 'chat',
 
-                sender: data.deviceName,
+                        sender: data.deviceName,
 
-                text: data.text,
+                        text: data.text,
 
-                time: new Date()
-                    .toLocaleTimeString()
+                        time: new Date()
+                            .toLocaleTimeString()
 
-            }));
+                    }));
+
+                }
+
+            });
 
         }
 
     });
 
-}
-
-    });
-
     ws.on('close', () => {
 
-        devices = devices.filter(d => d.ip !== ip);
+        devices =
+            devices.filter(d => d.ip !== ip);
 
     });
 
