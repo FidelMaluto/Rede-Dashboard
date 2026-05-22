@@ -17,13 +17,15 @@ function getDeviceName() {
     return 'Dispositivo';
 }
 
+let deviceName = getDeviceName();
+
 // ENVIAR DADOS AO SERVIDOR
 
 ws.onopen = () => {
 
     ws.send(JSON.stringify({
         type: 'register',
-        deviceName: getDeviceName()
+        deviceName
     }));
 
 };
@@ -80,10 +82,13 @@ const trafficChart = new Chart(ctx, {
 
 });
 
-let deviceName = getDeviceName();
-
 // RECEBER DADOS
+
 ws.onmessage = (event) => {
+
+    const data = JSON.parse(event.data);
+
+    // CHAT
 
     if (data.type === 'chat') {
 
@@ -92,21 +97,21 @@ ws.onmessage = (event) => {
 
         messages.innerHTML += `
 
-        <div class="message">
+            <div class="message">
 
-            <strong>
-                ${data.sender}
-            </strong>
+                <strong>
+                    ${data.sender}
+                </strong>
 
-            <small>
-                (${data.time})
-            </small>
+                <small>
+                    (${data.time})
+                </small>
 
-            <p>${data.text}</p>
+                <p>${data.text}</p>
 
-        </div>
+            </div>
 
-    `;
+        `;
 
         messages.scrollTop =
             messages.scrollHeight;
@@ -114,43 +119,57 @@ ws.onmessage = (event) => {
         return;
     }
 
-    const data = JSON.parse(event.data);
+    // DASHBOARD
 
-    document.getElementById('serverIP').innerText = data.serverIP;
+    document.getElementById('serverIP').innerText =
+        data.serverIP;
 
-    document.getElementById('total').innerText = data.total;
+    document.getElementById('total').innerText =
+        data.total;
 
-    document.getElementById('time').innerText = data.time;
+    document.getElementById('time').innerText =
+        data.time;
 
     // TABELA
-    const tbody = document.getElementById('devices');
+
+    const tbody =
+        document.getElementById('devices');
 
     tbody.innerHTML = '';
 
     data.devices.forEach(device => {
 
         tbody.innerHTML += `
+
             <tr>
+
                 <td>${device.name}</td>
+
                 <td>${device.ip}</td>
-                <td class="online">${device.status}</td>
+
+                <td class="online">
+                    ${device.status}
+                </td>
+
             </tr>
+
         `;
 
     });
 
-    // ATUALIZAR GRÁFICO
+    // GRÁFICO
 
     trafficChart.data.labels.push(data.time);
 
-    trafficChart.data.datasets[0].data.push(data.total);
+    trafficChart.data.datasets[0]
+        .data.push(data.total);
 
-    // manter apenas últimos 10 pontos
     if (trafficChart.data.labels.length > 10) {
 
         trafficChart.data.labels.shift();
 
-        trafficChart.data.datasets[0].data.shift();
+        trafficChart.data.datasets[0]
+            .data.shift();
 
     }
 
@@ -158,7 +177,8 @@ ws.onmessage = (event) => {
 
 };
 
-// Enviar mensagens
+// ENVIAR MENSAGEM
+
 function sendMessage() {
 
     const input =
@@ -180,11 +200,13 @@ function sendMessage() {
 
 }
 
+// UPLOAD
+
 async function uploadFile() {
 
     const file =
         document.getElementById('fileInput')
-            .files[0];
+        .files[0];
 
     if (!file) return;
 
@@ -210,6 +232,7 @@ async function uploadFile() {
         <div class="file-item">
 
             📄
+
             <a
                 href="/uploads/${data.filename}"
                 target="_blank"
