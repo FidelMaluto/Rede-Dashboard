@@ -1,17 +1,13 @@
 const ws = new WebSocket(`ws://${location.host}`);
 
 // DETECTAR NOME DO DISPOSITIVO
-
 function getDeviceName() {
 
     const userAgent = navigator.userAgent;
 
     if (/android/i.test(userAgent)) return 'Android';
-
     if (/iphone/i.test(userAgent)) return 'iPhone';
-
     if (/windows/i.test(userAgent)) return 'Windows PC';
-
     if (/mac/i.test(userAgent)) return 'MacBook';
 
     return 'Dispositivo';
@@ -20,7 +16,6 @@ function getDeviceName() {
 let deviceName = getDeviceName();
 
 function generateFakeMac() {
-
     return "XX:XX:XX:XX:XX:XX"
         .replace(/X/g, () => {
 
@@ -29,19 +24,15 @@ function generateFakeMac() {
             ).toString(16);
 
         });
-
 }
 
 // ENVIAR DADOS AO SERVIDOR
-
 ws.onopen = () => {
 
    ws.send(JSON.stringify({
 
     type: 'register',
-
     deviceName,
-
     mac: generateFakeMac()
 
 }));
@@ -49,65 +40,45 @@ ws.onopen = () => {
 };
 
 // GRÁFICO
-
 const ctx = document.getElementById('trafficChart');
-
 const trafficChart = new Chart(ctx, {
 
     type: 'line',
 
     data: {
-
         labels: [],
 
         datasets: [{
-
             label: 'Dispositivos Conectados',
-
             data: [],
-
             borderColor: '#38bdf8',
-
             backgroundColor: 'rgba(56,189,248,0.2)',
-
             tension: 0.4,
-
             fill: true
-
         }]
-
     },
 
     options: {
 
         responsive: true,
-
         scales: {
-
             y: {
-
                 beginAtZero: true,
-
                 ticks: {
                     stepSize: 1
                 }
-
             }
-
         }
-
     }
 
 });
 
 // RECEBER DADOS
-
 ws.onmessage = (event) => {
 
     const data = JSON.parse(event.data);
 
     // ARQUIVOS
-
     if (data.type === 'file') {
 
         const uploadedFiles =
@@ -116,15 +87,10 @@ ws.onmessage = (event) => {
         uploadedFiles.innerHTML += `
 
         <div class="file-item">
-
             📄
-
-            <a
-                href="/uploads/${data.filename}"
-                target="_blank"
-            >
+            <ahref="/uploads/${data.filename}" target="_blank">
                 ${data.filename}
-            </a>
+            </ahref=>
 
         </div>
 
@@ -134,46 +100,29 @@ ws.onmessage = (event) => {
     }
 
     // CHAT
-
     if (data.type === 'chat') {
 
-        const messages =
-            document.getElementById('messages');
+        const messages = document.getElementById('messages');
 
         messages.innerHTML += `
 
             <div class="message">
-
-                <strong>
-                    ${data.sender}
-                </strong>
-
-                <small>
-                    (${data.time})
-                </small>
-
+                <strong>${data.sender}</strong>
+                <small>(${data.time})</small>
                 <p>${data.text}</p>
-
             </div>
 
         `;
 
-        messages.scrollTop =
-            messages.scrollHeight;
+        messages.scrollTop = messages.scrollHeight;
 
         return;
     }
 
     // DASHBOARD
-
-    document.getElementById('serverIP').innerText =
-        data.serverIP;
-
-    document.getElementById('total').innerText =
-        data.total;
-
-    document.getElementById('time').innerText =
-        data.time;
+    document.getElementById('serverIP').innerText = data.serverIP;
+    document.getElementById('total').innerText = data.total;
+    document.getElementById('time').innerText = data.time;
 
     // TABELA
 
@@ -187,36 +136,23 @@ ws.onmessage = (event) => {
         tbody.innerHTML += `
 
             <tr>
-
                 <td>${device.name}</td>
-
                 <td>${device.ip}</td>
                 <td>${device.mac}</td>
-
-                <td class="online">
-                    ${device.status}
-                </td>
-
+                <td class="online">${device.status}</td>
             </tr>
-
-        `;
+         `;
 
     });
 
     // GRÁFICO
-
     trafficChart.data.labels.push(data.time);
-
     trafficChart.data.datasets[0]
         .data.push(data.total);
-
     if (trafficChart.data.labels.length > 10) {
-
         trafficChart.data.labels.shift();
-
         trafficChart.data.datasets[0]
             .data.shift();
-
     }
 
     trafficChart.update();
@@ -224,22 +160,16 @@ ws.onmessage = (event) => {
 };
 
 // ENVIAR MENSAGEM
-
 function sendMessage() {
-
     const input =
         document.getElementById('messageInput');
 
     if (!input.value) return;
 
     ws.send(JSON.stringify({
-
         type: 'chat',
-
         deviceName,
-
         text: input.value
-
     }));
 
     input.value = '';
@@ -247,9 +177,7 @@ function sendMessage() {
 }
 
 // UPLOAD
-
 async function uploadFile() {
-
     const file =
         document.getElementById('fileInput')
             .files[0];
@@ -261,11 +189,8 @@ async function uploadFile() {
     formData.append('file', file);
 
     await fetch('/upload', {
-
         method: 'POST',
-
         body: formData
-
     });
 
 }
