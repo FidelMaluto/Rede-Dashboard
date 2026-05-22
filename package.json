@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node --watch server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +12,8 @@
   "description": "",
   "dependencies": {
     "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "socket.io": "^4.8.3",
     "ws": "^8.20.0"
   }
 }
