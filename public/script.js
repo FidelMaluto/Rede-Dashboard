@@ -88,6 +88,33 @@ ws.onmessage = (event) => {
 
     const data = JSON.parse(event.data);
 
+    // ARQUIVOS
+
+    if (data.type === 'file') {
+
+        const uploadedFiles =
+            document.getElementById('uploadedFiles');
+
+        uploadedFiles.innerHTML += `
+
+        <div class="file-item">
+
+            📄
+
+            <a
+                href="/uploads/${data.filename}"
+                target="_blank"
+            >
+                ${data.filename}
+            </a>
+
+        </div>
+
+    `;
+
+        return;
+    }
+
     // CHAT
 
     if (data.type === 'chat') {
@@ -206,7 +233,7 @@ async function uploadFile() {
 
     const file =
         document.getElementById('fileInput')
-        .files[0];
+            .files[0];
 
     if (!file) return;
 
@@ -214,7 +241,7 @@ async function uploadFile() {
 
     formData.append('file', file);
 
-    const response = await fetch('/upload', {
+    await fetch('/upload', {
 
         method: 'POST',
 
@@ -222,25 +249,4 @@ async function uploadFile() {
 
     });
 
-    const data = await response.json();
-
-    const uploadedFiles =
-        document.getElementById('uploadedFiles');
-
-    uploadedFiles.innerHTML += `
-
-        <div class="file-item">
-
-            📄
-
-            <a
-                href="/uploads/${data.filename}"
-                target="_blank"
-            >
-                ${data.filename}
-            </a>
-
-        </div>
-
-    `;
 }

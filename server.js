@@ -157,11 +157,32 @@ app.post(
     upload.single('file'),
     (req, res) => {
 
-        res.json({
+        const fileData = {
+
+            type: 'file',
 
             filename: req.file.filename
 
+        };
+
+        // ENVIAR PARA TODOS
+
+        wss.clients.forEach(client => {
+
+            if (
+                client.readyState ===
+                WebSocket.OPEN
+            ) {
+
+                client.send(
+                    JSON.stringify(fileData)
+                );
+
+            }
+
         });
+
+        res.json(fileData);
 
     }
 );
