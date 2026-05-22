@@ -71,3 +71,83 @@ td {
     padding:20px;
     border-radius:15px;
 }
+
+/* CHAT */
+
+.chat-container{
+    margin-top:30px;
+}
+
+.chat-box{
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+}
+
+#messages{
+    height:250px;
+    overflow-y:auto;
+    background:#0f172a;
+    padding:10px;
+    border-radius:10px;
+    margin:15px 0;
+}
+
+.message{
+    background:#334155;
+    padding:10px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.chat-input{
+    display:flex;
+    gap:10px;
+}
+
+.chat-input input{
+    flex:1;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+}
+
+.chat-input button{
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    background:#38bdf8;
+    color:white;
+    cursor:pointer;
+}
+
+/* UPLOAD */
+
+.upload-container{
+    margin-top:30px;
+    background:#1e293b;
+    padding:20px;
+    border-radius:15px;
+}
+
+.upload-container input{
+    margin-top:15px;
+}
+
+.upload-container button{
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    border-radius:10px;
+    background:#22c55e;
+    color:white;
+    cursor:pointer;
+}
+
+.file-item{
+    margin-top:10px;
+    background:#334155;
+    padding:10px;
+    border-radius:10px;
+}

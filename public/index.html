@@ -58,6 +58,48 @@
 
     </div>
 
+    <div class="chat-container">
+
+    <div class="chat-box">
+
+        <h2>💬 Chat da Rede</h2>
+
+        <div id="messages"></div>
+
+        <div class="chat-input">
+
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Digite uma mensagem..."
+            >
+
+            <button onclick="sendMessage()">
+                Enviar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Upload de documentos -->
+
+<div class="upload-container">
+
+    <h2>📁 Compartilhar Documento</h2>
+
+    <input type="file" id="fileInput">
+
+    <button onclick="uploadFile()">
+        Enviar Documento
+    </button>
+
+    <div id="uploadedFiles"></div>
+
+</div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 
