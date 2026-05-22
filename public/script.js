@@ -80,9 +80,39 @@ const trafficChart = new Chart(ctx, {
 
 });
 
-// RECEBER DADOS
+let deviceName = getDeviceName();
 
+// RECEBER DADOS
 ws.onmessage = (event) => {
+
+    if (data.type === 'chat') {
+
+        const messages =
+            document.getElementById('messages');
+
+        messages.innerHTML += `
+
+        <div class="message">
+
+            <strong>
+                ${data.sender}
+            </strong>
+
+            <small>
+                (${data.time})
+            </small>
+
+            <p>${data.text}</p>
+
+        </div>
+
+    `;
+
+        messages.scrollTop =
+            messages.scrollHeight;
+
+        return;
+    }
 
     const data = JSON.parse(event.data);
 
@@ -92,8 +122,7 @@ ws.onmessage = (event) => {
 
     document.getElementById('time').innerText = data.time;
 
-// TABELA
-
+    // TABELA
     const tbody = document.getElementById('devices');
 
     tbody.innerHTML = '';
@@ -110,7 +139,7 @@ ws.onmessage = (event) => {
 
     });
 
-// ATUALIZAR GRÁFICO
+    // ATUALIZAR GRÁFICO
 
     trafficChart.data.labels.push(data.time);
 
@@ -128,3 +157,67 @@ ws.onmessage = (event) => {
     trafficChart.update();
 
 };
+
+// Enviar mensagens
+function sendMessage() {
+
+    const input =
+        document.getElementById('messageInput');
+
+    if (!input.value) return;
+
+    ws.send(JSON.stringify({
+
+        type: 'chat',
+
+        deviceName,
+
+        text: input.value
+
+    }));
+
+    input.value = '';
+
+}
+
+async function uploadFile() {
+
+    const file =
+        document.getElementById('fileInput')
+            .files[0];
+
+    if (!file) return;
+
+    const formData = new FormData();
+
+    formData.append('file', file);
+
+    const response = await fetch('/upload', {
+
+        method: 'POST',
+
+        body: formData
+
+    });
+
+    const data = await response.json();
+
+    const uploadedFiles =
+        document.getElementById('uploadedFiles');
+
+    uploadedFiles.innerHTML += `
+
+        <div class="file-item">
+
+            📄
+            <a
+                href="/uploads/${data.filename}"
+                target="_blank"
+            >
+                ${data.filename}
+            </a>
+
+        </div>
+
+    `;
+}

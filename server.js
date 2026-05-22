@@ -3,12 +3,15 @@ const http = require('http');
 const WebSocket = require('ws');
 const { exec } = require('child_process');
 const os = require('os');
+const path = require('path');
+const multer = require('multer');
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
 
 // PEGAR IP DO SERVIDOR
 
@@ -60,6 +63,33 @@ wss.on('connection', (ws, req) => {
 
         }
 
+        if (data.type === 'chat') {
+
+    wss.clients.forEach(client => {
+
+        if (
+            client.readyState === WebSocket.OPEN
+        ) {
+
+            client.send(JSON.stringify({
+
+                type: 'chat',
+
+                sender: data.deviceName,
+
+                text: data.text,
+
+                time: new Date()
+                    .toLocaleTimeString()
+
+            }));
+
+        }
+
+    });
+
+}
+
     });
 
     ws.on('close', () => {
@@ -70,8 +100,22 @@ wss.on('connection', (ws, req) => {
 
 });
 
-// WEBSOCKET
+const storage = multer.diskStorage({
 
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(
+            null,
+            Date.now() + '-' + file.originalname
+        );
+    }
+});
+
+const upload = multer({ storage });
+
+// WEBSOCKET
 wss.on('connection', () => {
     console.log('Novo dashboard conectado');
 });
@@ -98,6 +142,20 @@ setInterval(() => {
     });
 
 }, 1000);
+
+app.post(
+    '/upload',
+    upload.single('file'),
+    (req, res) => {
+
+        res.json({
+
+            filename: req.file.filename
+
+        });
+
+    }
+);
 
 // INICIAR SERVIDOR
 
