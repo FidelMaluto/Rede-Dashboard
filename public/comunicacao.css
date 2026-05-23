@@ -1,0 +1,43 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+}
+
+body {
+    display: flex;
+    background: #0f172a;
+    color: white;
+}
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background: #1e293b;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    color: #38bdf8;
+    margin-bottom: 30px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #334155;
+}
+
+.main {
+    flex: 1;
+    padding: 20px;
+}
+
+.communication-grid {
+    display: grid;
+}
