@@ -1,0 +1,67 @@
+* {
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.card h2 {
+    color: #94a3b8;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1e293b;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+th {
+    background: #334155;
+    padding: 15px;
+    text-align: left;
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #334155;
+}
+
+.online {
+    color: #22c55e;
+    font-weight: bold;
+}
+
+.chart-container {
+    margin-top: 30px;
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:900px) {
+
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+        display: flex;
+        gap: 10px;
+        overflow: auto;
+    }
+
+    .sidebar h2 {
+        display: none;
+    }
+
+}

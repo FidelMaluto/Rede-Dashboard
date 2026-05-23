@@ -1,0 +1,68 @@
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>🌐 Turma-B</h2>
+
+        <a href="admin.html">Dashboard</a>
+        <a href="communication.html">Comunicação</a>
+
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <h1>Painel Administrativo</h1>
+
+            <div class="user"> Admin</div>
+
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h2>IP do Servidor</h2>
+                <p id="serverIP">...</p>
+            </div>
+
+            <div class="card">
+                <h2>Total Dispositivos</h2>
+                <p id="total">0</p>
+            </div>
+
+            <div class="card">
+                <h2>Hora</h2>
+                <p id="time">--:--:--</p>
+            </div>
+
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Dispositivo</th>
+                    <th>IP</th>
+                    <th>MAC</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="devices"></tbody>
+        </table>
+
+        <div class="chart-container">
+            <canvas id="trafficChart"></canvas>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
