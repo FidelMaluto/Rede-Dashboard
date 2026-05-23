@@ -4,58 +4,89 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Comunicação</title>
 
-    <link rel="stylesheet" href="comunicacao.css">
+    <link rel="stylesheet" href="./css/global.css">
+
+    <link rel="stylesheet" href="./css/communicacao.css">
 
 </head>
 
 <body>
 
-    <div class="sidebar">
+    <div class="layout">
 
-        <h2>🌐 Turma-B</h2>
+        <!-- SIDEBAR -->
 
-        <a href="admin.html">Dashboard</a>
+        <aside class="sidebar">
 
-        <a href="communication.html">
-            Comunicação
-        </a>
+            <h2>🌐 Turma-B</h2>
 
-    </div>
+            <a href="/dashboard.html">
+                Dashboard
+            </a>
 
-    <div class="main">
+            <a href="/communicacao.html">
+                Comunicação
+            </a>
 
-        <h1>💬 Comunicação da Rede</h1>
+        </aside>
 
-        <div class="communication-grid">
+        <!-- MAIN -->
 
-            <div class="chat-box">
+        <main class="main">
 
-                <h2>Chat Interno</h2>
+            <h1>💬 Comunicação</h1>
 
-                <div id="messages"></div>
+            <div class="communication-grid">
 
-                <div class="chat-input">
+                <!-- CHAT -->
 
-                    <input type="text" id="messageInput" placeholder="Digite mensagem...">
+                <div class="chat-box">
 
-                    <button onclick="sendMessage()">
+                    <h2>Chat</h2>
+
+                    <div id="messages"></div>
+
+                    <div class="chat-input">
+
+                        <input type="text" id="messageInput" placeholder="Digite mensagem...">
+
+                        <button onclick="sendMessage()">
+                            Enviar
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- FILES -->
+
+                <div class="files-box">
+
+                    <h2>Arquivos</h2>
+
+                    <input type="file" id="fileInput">
+
+                    <button onclick="uploadFile()">
                         Enviar
                     </button>
+
+                    <div id="uploadedFiles"></div>
 
                 </div>
 
             </div>
 
-            <div class="files-box">
+        </main>
 
-                <h2>Arquivos Compartilhados</h2>
+    </div>
 
-                <input type="file" id="fileInput">
+    <script type="module" src="./js/communication.js"></script>
 
-                <button onclick="uploadFile()">
+</body>
 
 </html>

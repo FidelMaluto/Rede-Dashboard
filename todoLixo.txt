@@ -165,3 +165,77 @@ td {
 .info {
     margin-bottom: 20px;
 }
+
+// PROJETO TODO
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>- Turma B -</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <h1>🌐 Turma-B Network Dashboard</h1>
+
+    <div class="cards">
+        <div class="card">
+            <h2>IP do Servidor</h2>
+            <p id="serverIP">...</p>
+        </div>
+        <div class="card">
+            <h2>Total Dispositivos</h2>
+            <p id="total">0</p>
+        </div>
+        <div class="card">
+            <h2>Hora</h2>
+            <p id="time">--:--:--</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Dispositivo</th>
+                <th>IP</th>
+                <th>MAC Address</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="devices"></tbody>
+    </table>
+
+    <div class="chart-container">
+        <canvas id="trafficChart"></canvas>
+    </div>
+    <div class="chat-container">
+        <div class="chat-box">
+            <h2>💬 Chat da Rede</h2>
+
+            <div id="messages"></div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="Digite uma mensagem...">
+                <button onclick="sendMessage()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload de documentos -->
+    <div class="upload-container">
+        <h2>📁 Compartilhar Documento</h2>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Enviar Documento</button>
+        <div id="uploadedFiles"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>
