@@ -8,31 +8,25 @@ const trafficChart = new Chart(ctx, {
     type: 'line',
 
     data: {
-
         labels: [],
-
         datasets: [{
-
             label: 'Dispositivos',
-
             data: [],
-
             borderColor: '#38bdf8',
-
             tension: 0.4
-
         }]
-
     }
-
 });
 
 ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
 
-    const data =
-        JSON.parse(event.data);
-
-    if (data.type) return;
+    if (
+        data.type === 'chat'
+        || data.type === 'file'
+    ) {
+        return;
+    }
 
     document.getElementById(
         'serverIP'
@@ -46,10 +40,7 @@ ws.onmessage = (event) => {
         'time'
     ).innerText = data.time;
 
-    const tbody =
-        document.getElementById(
-            'devices'
-        );
+    const tbody = document.getElementById('devices');
 
     tbody.innerHTML = '';
 
@@ -58,20 +49,12 @@ ws.onmessage = (event) => {
         tbody.innerHTML += `
 
             <tr>
-
                 <td>${device.name}</td>
-
                 <td>${device.ip}</td>
-
                 <td>${device.mac}</td>
-
-                <td class="online">
-                    ${device.status}
-                </td>
-
+                <td class="online"> ${device.status}</td>
             </tr>
-
-        `;
+             `;
 
     });
 
