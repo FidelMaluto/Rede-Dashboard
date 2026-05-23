@@ -8,14 +8,71 @@ const trafficChart = new Chart(ctx, {
     type: 'line',
 
     data: {
+
         labels: [],
+
         datasets: [{
-            label: 'Dispositivos',
+
+            label: 'Atividade da Rede',
+
             data: [],
+
             borderColor: '#38bdf8',
-            tension: 0.4
+
+            backgroundColor:
+                'rgba(56,189,248,0.15)',
+
+            fill: true,
+
+            tension: 0.4,
+
+            borderWidth: 3,
+
+            pointRadius: 4
+
         }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+                labels: {
+                    color: 'white'
+                }
+            }
+
+        },
+
+        scales: {
+
+            x: {
+                ticks: {
+                    color: '#94a3b8'
+                },
+                grid: {
+                    color: '#1e293b'
+                }
+            },
+
+            y: {
+                ticks: {
+                    color: '#94a3b8'
+                },
+                grid: {
+                    color: '#1e293b'
+                },
+                beginAtZero: true
+            }
+
+        }
+
     }
+
 });
 
 ws.onmessage = (event) => {
@@ -63,7 +120,9 @@ ws.onmessage = (event) => {
     );
 
     trafficChart.data.datasets[0]
-        .data.push(data.total);
+        .data.push(
+            data.total + Math.random() * 2
+        );
 
     if (
         trafficChart.data.labels.length > 10
