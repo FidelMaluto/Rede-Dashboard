@@ -5,8 +5,7 @@ const deviceName =
     || 'Dispositivo';
 
 // CHAT
-
-window.sendMessage = () => {
+window.sendMessage = function () {
 
     const input =
         document.getElementById(
@@ -30,8 +29,7 @@ window.sendMessage = () => {
 };
 
 // UPLOAD
-
-window.uploadFile = async () => {
+window.uploadFile = async function () {
 
     const file =
         document.getElementById(
