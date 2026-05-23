@@ -14,6 +14,5 @@ function login() {
         username
     );
 
-    window.location.href =
-        '/dashboard.html';
+    window.location.href = './dashboard.html';
 }
