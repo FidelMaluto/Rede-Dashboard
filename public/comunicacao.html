@@ -40,48 +40,63 @@
 
             <h1>💬 Comunicação</h1>
 
-            <div class="communication-grid">
+            <div class="communication-wrapper">
 
                 <!-- CHAT -->
 
-                <div class="chat-box">
+                <section class="chat-section">
 
-                    <h2>Chat</h2>
+                    <div class="chat-header">
+
+                        <h2>Chat da Rede</h2>
+
+                    </div>
 
                     <div id="messages"></div>
 
                     <div class="chat-input">
 
-                        <input type="text" id="messageInput" placeholder="Digite mensagem...">
+                        <input type="text" id="messageInput" placeholder="Digite uma mensagem...">
 
                         <button onclick="sendMessage()">
+
                             Enviar
+
                         </button>
 
                     </div>
 
-                </div>
+                </section>
 
                 <!-- FILES -->
 
-                <div class="files-box">
+                <section class="files-section">
 
-                    <h2>Arquivos</h2>
+                    <div class="files-header">
 
-                    <input type="file" id="fileInput">
+                        <h2>Arquivos Compartilhados</h2>
 
-                    <button onclick="uploadFile()">
-                        Enviar
-                    </button>
+                    </div>
 
-                    <div id="uploadedFiles"></div>
+                    <div class="files-content">
 
-                </div>
+                        <input type="file" id="fileInput">
+
+                        <button onclick="uploadFile()">
+
+                            Enviar Arquivo
+
+                        </button>
+
+                        <div id="uploadedFiles"></div>
+
+                    </div>
+
+                </section>
 
             </div>
 
         </main>
-
     </div>
 
     <script type="module" src="./js/comunicacao.js"></script>

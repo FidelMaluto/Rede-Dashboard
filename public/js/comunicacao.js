@@ -17,9 +17,7 @@ window.sendMessage = function () {
     ws.send(JSON.stringify({
 
         type: 'chat',
-
         sender: deviceName,
-
         text: input.value
 
     }));
