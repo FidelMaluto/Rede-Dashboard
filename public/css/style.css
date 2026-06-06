@@ -16,7 +16,6 @@ body {
 }
 
 /* SIDEBAR */
-
 .sidebar {
     width: 260px;
     background: #111827;
@@ -49,7 +48,6 @@ body {
 }
 
 /* MAIN */
-
 .main {
     flex: 1;
     padding: 25px;
@@ -62,7 +60,6 @@ body {
 }
 
 /* RESPONSIVO */
-
 @media(max-width:900px) {
 
     .layout {
