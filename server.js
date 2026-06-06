@@ -30,10 +30,10 @@ function getServerIP() {
 
 // ESCANEAR REDE
 let devices = [];
+
 wss.on('connection', (ws, req) => {
 
     let ip = req.socket.remoteAddress;
-
     ip = ip.replace('::ffff:', '');
 
     ws.on('message', (message) => {
@@ -41,38 +41,27 @@ wss.on('connection', (ws, req) => {
 
         // REGISTRAR DISPOSITIVO
         if (data.type === 'register') {
-            const exists =
-                devices.find(d => d.ip === ip);
+            const exists = devices.find(d => d.ip === ip);
 
             if (!exists) {
                 devices.push({
-
                     name: data.deviceName,
                     ip,
                     mac: data.mac || 'N/A',
                     status: 'online'
-
                 });
             }
         }
 
         // CHAT
         if (data.type === 'chat') {
-
             wss.clients.forEach(client => {
-                if (
-                    client.readyState ===
-                    WebSocket.OPEN
-                ) {
-
+                if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify({
-
                         type: 'chat',
                         sender: data.deviceName,
                         text: data.text,
-                        time: new Date()
-                            .toLocaleTimeString()
-
+                        time: new Date().toLocaleTimeString()
                     }));
                 }
             });
@@ -86,20 +75,15 @@ wss.on('connection', (ws, req) => {
 });
 
 const storage = multer.diskStorage({
-
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(
-            null,
-            Date.now() + '-' + file.originalname
-        );
+        cb(null, Date.now() + '-' + file.originalname);
     }
 });
 
 const upload = multer({ storage });
-
 // WEBSOCKET
 wss.on('connection', () => {
     console.log('Novo dashboard conectado');
@@ -118,45 +102,27 @@ setInterval(() => {
         if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(data));
         }
-
     });
-
 }, 1000);
 
-app.post(
-    '/upload',
-    upload.single('file'),
-    (req, res) => {
+app.post('/upload', upload.single('file'), (req, res) => {
+    const fileData = {
+        type: 'file',
+        filename: req.file.filename
+    };
 
-        const fileData = {
-
-            type: 'file',
-            filename: req.file.filename
-
-        };
-
-        // ENVIAR PARA TODOS
-        wss.clients.forEach(client => {
-            if (
-                client.readyState ===
-                WebSocket.OPEN
-            ) {
-                client.send(
-                    JSON.stringify(fileData)
-                );
-            }
-        });
-
-        res.json(fileData);
-
+    // ENVIAR PARA TODOS
+    wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(fileData));
+        }
     });
+
+    res.json(fileData);
+
+});
 
 // INICIAR SERVIDOR
 server.listen(3000, '0.0.0.0', () => {
-
-    console.log('==============================');
-    console.log('🚀 ISP Dashboard Rodando');
-    console.log('🌐 http://localhost:3000');
-    console.log('==============================');
-
+    console.log('Dashboard Rodando em --> http://localhost:3000');
 });
