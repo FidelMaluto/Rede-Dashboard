@@ -5,8 +5,7 @@ const deviceName = localStorage.getItem('deviceName') || 'Dispositivo';
 
 // GERAR MAC
 function generateFakeMac() {
-    return "XX:XX:XX:XX:XX:XX"
-        .replace(/X/g, () => {
+    return "XX:XX:XX:XX:XX:XX".replace(/X/g, () => {
 
             return Math.floor(Math.random() * 16).toString(16);
 

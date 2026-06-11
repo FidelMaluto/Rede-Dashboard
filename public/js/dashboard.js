@@ -22,8 +22,8 @@ const trafficChart = new Chart(ctx, {
     },
 
     options: {
+        
         responsive: true,
-
         plugins: {
 
             legend: {

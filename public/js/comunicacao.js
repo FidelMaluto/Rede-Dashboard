@@ -37,7 +37,6 @@ window.uploadFile = async function () {
 };
 
 // RECEBER
-
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
@@ -69,5 +68,4 @@ ws.onmessage = (event) => {
             </div>
         `;
     }
-
 };
