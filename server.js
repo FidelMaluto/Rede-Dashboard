@@ -15,6 +15,7 @@ app.use('/uploads', express.static('uploads'));
 
 // PEGAR IP DO SERVIDOR
 function getServerIP() {
+    
     const interfaces = os.networkInterfaces();
 
     for (let name in interfaces) {
@@ -41,6 +42,7 @@ wss.on('connection', (ws, req) => {
 
         // REGISTRAR DISPOSITIVO
         if (data.type === 'register') {
+
             const exists = devices.find(d => d.ip === ip);
 
             if (!exists) {
@@ -75,6 +77,7 @@ wss.on('connection', (ws, req) => {
 });
 
 const storage = multer.diskStorage({
+
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
     },
@@ -84,6 +87,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
 // WEBSOCKET
 wss.on('connection', () => {
     console.log('Novo dashboard conectado');
@@ -91,11 +95,14 @@ wss.on('connection', () => {
 
 // TEMPO REAL
 setInterval(() => {
+
     const data = {
+
         serverIP: getServerIP(),
         total: devices.length,
         time: new Date().toLocaleTimeString(),
         devices
+
     };
 
     wss.clients.forEach(client => {
@@ -103,6 +110,7 @@ setInterval(() => {
             client.send(JSON.stringify(data));
         }
     });
+
 }, 1000);
 
 app.post('/upload', upload.single('file'), (req, res) => {
