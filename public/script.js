@@ -1,4 +1,4 @@
-const ws = new WebSocket(`ws://${location.host}`);
+import ws from "./websocket.js";
 
 // DETECTAR NOME DO DISPOSITIVO
 function getDeviceName() {
@@ -13,7 +13,9 @@ function getDeviceName() {
     return 'Dispositivo';
 }
 
-let deviceName = getDeviceName();
+const deviceName =
+    localStorage.getItem("deviceName")
+    || getDeviceName();
 
 function generateFakeMac() {
     return "XX:XX:XX:XX:XX:XX"
@@ -32,7 +34,8 @@ ws.onopen = () => {
     ws.send(JSON.stringify({
 
         type: 'register',
-        deviceName,
+        deviceName: localStorage.getItem('deviceName'),
+        deviceType: getDeviceType(),
         mac: generateFakeMac()
 
     }));
@@ -88,7 +91,7 @@ ws.onmessage = (event) => {
 
         <div class="file-item">
             📄
-            <ahref="/uploads/${data.filename}" target="_blank">
+            <a href="/uploads/${data.filename}" target="_blank">
                 ${data.filename}
             </ahref=>
 

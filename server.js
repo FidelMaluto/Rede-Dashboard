@@ -45,15 +45,17 @@ wss.on('connection', (ws, req) => {
 
             const exists = devices.find(d => d.ip === ip);
 
-            if (!exists) {
+            if (exists) {
+                exists.name = data.deviceName;
+                exists.type = data.deviceType;
+                exists.mac = data.mac;
+            } else {
                 devices.push({
-
                     name: data.deviceName,
                     type: data.deviceType,
                     ip,
                     mac: data.mac,
                     status: 'online'
-
                 });
             }
         }
