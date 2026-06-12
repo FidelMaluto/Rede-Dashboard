@@ -13,9 +13,7 @@ function getDeviceName() {
     return 'Dispositivo';
 }
 
-const deviceName =
-    localStorage.getItem("deviceName")
-    || getDeviceName();
+const deviceName = localStorage.getItem("deviceName") || getDeviceName();
 
 function generateFakeMac() {
     return "XX:XX:XX:XX:XX:XX"
@@ -47,10 +45,8 @@ const ctx = document.getElementById('trafficChart');
 const trafficChart = new Chart(ctx, {
 
     type: 'line',
-
     data: {
         labels: [],
-
         datasets: [{
             label: 'Dispositivos Conectados',
             data: [],
@@ -90,7 +86,7 @@ ws.onmessage = (event) => {
         uploadedFiles.innerHTML += `
 
         <div class="file-item">
-            📄
+
             <a href="/uploads/${data.filename}" target="_blank">
                 ${data.filename}
             </ahref=>
@@ -129,8 +125,7 @@ ws.onmessage = (event) => {
 
     // TABELA
 
-    const tbody =
-        document.getElementById('devices');
+    const tbody = document.getElementById('devices');
 
     tbody.innerHTML = '';
 
@@ -150,12 +145,11 @@ ws.onmessage = (event) => {
 
     // GRÁFICO
     trafficChart.data.labels.push(data.time);
-    trafficChart.data.datasets[0]
-        .data.push(data.total);
+    trafficChart.data.datasets[0].data.push(data.total);
+
     if (trafficChart.data.labels.length > 10) {
         trafficChart.data.labels.shift();
-        trafficChart.data.datasets[0]
-            .data.shift();
+        trafficChart.data.datasets[0].data.shift();
     }
 
     trafficChart.update();
@@ -164,8 +158,7 @@ ws.onmessage = (event) => {
 
 // ENVIAR MENSAGEM
 function sendMessage() {
-    const input =
-        document.getElementById('messageInput');
+    const input = document.getElementById('messageInput');
 
     if (!input.value) return;
 
@@ -181,9 +174,7 @@ function sendMessage() {
 
 // UPLOAD
 async function uploadFile() {
-    const file =
-        document.getElementById('fileInput')
-            .files[0];
+    const file = document.getElementById('fileInput').files[0];
 
     if (!file) return;
 
