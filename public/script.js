@@ -29,13 +29,13 @@ function generateFakeMac() {
 // ENVIAR DADOS AO SERVIDOR
 ws.onopen = () => {
 
-   ws.send(JSON.stringify({
+    ws.send(JSON.stringify({
 
-    type: 'register',
-    deviceName,
-    mac: generateFakeMac()
+        type: 'register',
+        deviceName,
+        mac: generateFakeMac()
 
-}));
+    }));
 
 };
 
@@ -134,14 +134,14 @@ ws.onmessage = (event) => {
     data.devices.forEach(device => {
 
         tbody.innerHTML += `
-
-            <tr>
-                <td>${device.name}</td>
-                <td>${device.ip}</td>
-                <td>${device.mac}</td>
-                <td class="online">${device.status}</td>
-            </tr>
-         `;
+                    <tr>
+                        <td>${device.name}</td>
+                        <td>${device.type}</td>
+                        <td>${device.ip}</td>
+                        <td>${device.mac}</td>
+                        <td class="online">${device.status}</td>
+                    </tr>
+                `;
 
     });
 

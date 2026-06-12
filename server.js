@@ -15,7 +15,7 @@ app.use('/uploads', express.static('uploads'));
 
 // PEGAR IP DO SERVIDOR
 function getServerIP() {
-    
+
     const interfaces = os.networkInterfaces();
 
     for (let name in interfaces) {
@@ -47,10 +47,13 @@ wss.on('connection', (ws, req) => {
 
             if (!exists) {
                 devices.push({
+
                     name: data.deviceName,
+                    type: data.deviceType,
                     ip,
-                    mac: data.mac || 'N/A',
+                    mac: data.mac,
                     status: 'online'
+
                 });
             }
         }

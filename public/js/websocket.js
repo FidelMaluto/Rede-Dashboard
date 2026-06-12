@@ -14,13 +14,16 @@ function generateFakeMac() {
 
 // REGISTRAR
 ws.onopen = () => {
+
     ws.send(JSON.stringify({
 
         type: 'register',
-        deviceName,
+        deviceName: localStorage.getItem('deviceName'),
+        deviceType: getDeviceType(),
         mac: generateFakeMac()
 
     }));
+
 };
 
 export default ws;
