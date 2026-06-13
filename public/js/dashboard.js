@@ -77,6 +77,7 @@ ws.onmessage = (event) => {
         tbody.innerHTML += `
             <tr>
                 <td>${device.name}</td>
+                <td>${device.type}</td>
                 <td>${device.ip}</td>
                 <td>${device.mac}</td>
                 <td class="online"> ${device.status}</td>
