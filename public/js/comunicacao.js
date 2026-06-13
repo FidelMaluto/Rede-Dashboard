@@ -49,19 +49,30 @@ window.uploadFile = async function () {
 ws.onmessage = (event) => {
     const data = JSON.parse(event.data);
 
-    // CHAT
-    if (data.type === 'chat') {
-        const messages = document.getElementById('messages');
+    if (data.type === "chat") {
+
+        const messages = document.getElementById("messages");
 
         messages.innerHTML += `
-            <div class="message">
 
-                <strong> ${data.sender} </strong>
-                <p>${data.text}</p>
+        <div class="message">
 
-            </div>
-        `;
+            <strong>🔒 ${data.sender}</strong>
+
+            <small>${data.time}</small>
+
+            <p>${data.text}</p>
+
+        </div>
+
+    `;
+
+        messages.scrollTop = messages.scrollHeight;
+
+        return;
+
     }
+
 
     // Um Para um
     if (data.devices) {
@@ -71,30 +82,40 @@ ws.onmessage = (event) => {
 
         const atual = select.value;
 
-        select.innerHTML =
-            '<option value="all">📢 Todos</option>';
+        let totalDevices = 0;
 
-        data.devices.forEach(device => {
+        if (data.devices && data.devices.length !== totalDevices) {
 
-            select.innerHTML += `
+            totalDevices = data.devices.length;
 
+            const select = document.getElementById("targetDevice");
+
+            select.innerHTML =
+                '<option value="all">📢 Todos</option>';
+
+            data.devices.forEach(device => {
+
+                select.innerHTML += `
             <option value="${device.ip}">
-    ${device.name} (${device.type})
-</option>
-
+                ${device.name} (${device.type})
+            </option>
         `;
 
-        });
+            });
 
-        select.value = atual;
+        }
 
-    }
+    });
 
-    // FILES
-    if (data.type === 'file') {
-        const uploadedFiles = document.getElementById('uploadedFiles');
+    select.value = atual;
 
-        uploadedFiles.innerHTML += `
+}
+
+// FILES
+if (data.type === 'file') {
+    const uploadedFiles = document.getElementById('uploadedFiles');
+
+    uploadedFiles.innerHTML += `
             <div class="file-item">
 
                 <a href="/uploads/${data.filename}" target="_blank">
@@ -103,5 +124,5 @@ ws.onmessage = (event) => {
 
             </div>
         `;
-    }
+}
 };
