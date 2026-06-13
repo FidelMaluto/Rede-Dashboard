@@ -61,17 +61,42 @@ wss.on('connection', (ws, req) => {
         }
 
         // CHAT
-        if (data.type === 'chat') {
+        if (data.type === "chat") {
+
             wss.clients.forEach(client => {
-                if (client.readyState === WebSocket.OPEN) {
+
+                if (client.readyState !== WebSocket.OPEN)
+                    return;
+
+                const clientIp =
+                    client._socket.remoteAddress
+                        .replace("::ffff:", "");
+
+                if (
+                    data.target === "all" ||
+                    clientIp === data.target ||
+                    clientIp === ip
+                ) {
+
                     client.send(JSON.stringify({
-                        type: 'chat',
+
+                        type: "chat",
+
                         sender: data.deviceName,
+
                         text: data.text,
-                        time: new Date().toLocaleTimeString()
+
+                        time: new Date()
+                            .toLocaleTimeString(),
+
+                        target: data.target
+
                     }));
+
                 }
+
             });
+
         }
     });
 

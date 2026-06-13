@@ -3,22 +3,31 @@ import ws from './websocket.js';
 const deviceName = localStorage.getItem('deviceName') || 'Dispositivo';
 
 // CHAT
-window.sendMessage = function () {
+function sendMessage() {
+
     const input =
-        document.getElementById('messageInput');
+        document.getElementById("messageInput");
+
+    const target =
+        document.getElementById("targetDevice");
 
     if (!input.value) return;
 
     ws.send(JSON.stringify({
-        type: 'chat',
-        deviceName: deviceName,
+
+        type: "chat",
+
+        deviceName,
+
+        target: target.value,
+
         text: input.value
+
     }));
 
-    input.value = '';
+    input.value = "";
 
-};
-
+}
 // UPLOAD
 window.uploadFile = async function () {
     const file = document.getElementById('fileInput').files[0];
@@ -52,6 +61,33 @@ ws.onmessage = (event) => {
 
             </div>
         `;
+    }
+
+    // Um Para um
+    if (data.devices) {
+
+        const select =
+            document.getElementById("targetDevice");
+
+        const atual = select.value;
+
+        select.innerHTML =
+            '<option value="all">📢 Todos</option>';
+
+        data.devices.forEach(device => {
+
+            select.innerHTML += `
+
+            <option value="${device.ip}">
+    ${device.name} (${device.type})
+</option>
+
+        `;
+
+        });
+
+        select.value = atual;
+
     }
 
     // FILES
