@@ -6,7 +6,6 @@ const deviceName = localStorage.getItem('deviceName') || 'Dispositivo';
 let totalDevices = 0;
 
 // ENVIAR MENSAGEM
-
 window.sendMessage = function () {
 
     const input = document.getElementById("messageInput");
@@ -28,7 +27,6 @@ window.sendMessage = function () {
 };
 
 // ENVIAR ARQUIVO
-
 window.uploadFile = async function () {
 
     const file = document.getElementById("fileInput").files[0];
@@ -49,13 +47,11 @@ window.uploadFile = async function () {
 };
 
 // RECEBER DADOS
-
 ws.addEventListener("message", (event) => {
 
     const data = JSON.parse(event.data);
 
     // CHAT
-
     if (data.type === "chat") {
 
         const messages = document.getElementById("messages");
@@ -81,7 +77,6 @@ ws.addEventListener("message", (event) => {
     }
 
     // ARQUIVOS
-
     if (data.type === "file") {
 
         const uploadedFiles = document.getElementById("uploadedFiles");
@@ -101,7 +96,6 @@ ws.addEventListener("message", (event) => {
     }
 
     // DISPOSITIVOS
-
     if (data.devices) {
 
         if (data.devices.length !== totalDevices) {
@@ -134,7 +128,7 @@ ws.addEventListener("message", (event) => {
 
 });
 
-wss.on("connection", (ws, req) => {
+ws.on("connection", (ws, req) => {
 
     ws.clientIp = req.socket.remoteAddress.replace("::ffff:", "");
     // restante do código...
