@@ -46,9 +46,11 @@ wss.on('connection', (ws, req) => {
             const exists = devices.find(d => d.ip === ip);
 
             if (exists) {
+
                 exists.name = data.deviceName;
                 exists.type = data.deviceType;
                 exists.mac = data.mac;
+                
             } else {
                 devices.push({
                     name: data.deviceName,
@@ -65,30 +67,18 @@ wss.on('connection', (ws, req) => {
 
             wss.clients.forEach(client => {
 
-                if (client.readyState !== WebSocket.OPEN)
-                    return;
+                if (client.readyState !== WebSocket.OPEN) return;
 
-                const clientIp =
-                    client._socket.remoteAddress
-                        .replace("::ffff:", "");
+                const clientIp = client._socket.remoteAddress.replace("::ffff:", "");
 
-                if (
-                    data.target === "all" ||
-                    clientIp === data.target ||
-                    clientIp === ip
-                ) {
+                if (data.target === "all" || clientIp === data.target || clientIp === ip) {
 
                     client.send(JSON.stringify({
 
                         type: "chat",
-
                         sender: data.deviceName,
-
                         text: data.text,
-
-                        time: new Date()
-                            .toLocaleTimeString(),
-
+                        time: new Date().toLocaleTimeString(),
                         target: data.target
 
                     }));
