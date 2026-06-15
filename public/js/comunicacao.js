@@ -106,7 +106,7 @@ ws.addEventListener("message", (event) => {
 
             const atual = select.value;
 
-            select.innerHTML = '<option value="all">📢 Todos</option>';
+            select.innerHTML = '<option value="all">Todos</option>';
 
             data.devices.forEach(device => {
 
@@ -128,33 +128,37 @@ ws.addEventListener("message", (event) => {
 
 });
 
-ws.on("connection", (ws, req) => {
+// // Conexão WS
+// const wss = new WebSocketServer({ port: 3000 });
 
-    ws.clientIp = req.socket.remoteAddress.replace("::ffff:", "");
-    // restante do código...
+// wss.on("connection", (ws, req) => {
 
-});
+//     ws.clientIp = req.socket.remoteAddress.replace("::ffff:", "");
 
-// Envio de sms privada
-if (data.type === "chat") {
+//     console.log("Cliente conectado");
 
-    wss.clients.forEach(client => {
+// });
 
-        if (client.readyState !== WebSocket.OPEN) return;
+// // Envio de sms privada
+// if (data.type === "chat") {
 
-        if (data.target === "all" || client.clientIp === data.target || client.clientIp === ws.clientIp) {
+//     wss.clients.forEach(client => {
 
-            client.send(JSON.stringify({
+//         if (client.readyState !== WebSocket.OPEN) return;
 
-                type: "chat",
-                sender: data.deviceName,
-                text: data.text,
-                time: new Date().toLocaleTimeString()
+//         if (data.target === "all" || client.clientIp === data.target || client.clientIp === ws.clientIp) {
 
-            }));
+//             client.send(JSON.stringify({
 
-        }
+//                 type: "chat",
+//                 sender: data.deviceName,
+//                 text: data.text,
+//                 time: new Date().toLocaleTimeString()
 
-    });
+//             }));
 
-}
+//         }
+
+//     });
+
+// }
