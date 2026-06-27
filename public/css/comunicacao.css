@@ -160,6 +160,29 @@
     word-break: break-all;
 }
 
+/* Control do chat */
+.chat-controls {
+    padding: 8px;
+    margin-top: 12px;
+}
+
+.chat-controls select {
+    width: 90px;
+    padding: 8px;
+    cursor: pointer;
+}
+/* Edição do option brevemente */
+.chat-controls option {
+    color: white;
+    cursor: pointer;
+}
+
+.chat-controls option:hover {
+    background-color: #0f172a;
+    color: white;
+    cursor: pointer;
+}
+
 /* RESPONSIVO */
 @media(max-width:1000px) {
     .communication-wrapper {

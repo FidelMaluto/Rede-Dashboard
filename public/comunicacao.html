@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/comunicacao.css">
+    <script type="module" src="./js/comunicacao.js" defer></script>
 
 </head>
 
@@ -31,19 +32,21 @@
         <main class="main">
             <h1>Comunicação</h1>
 
+            <div class="chat-controls">
+
+                <label for="targetDevice">Dispositivo destino</label>
+
+                <select id="targetDevice">
+
+                    <option value="all">Todos</option>
+
+                </select>
+
+            </div>
+
             <div class="communication-wrapper">
+
                 <!-- CHAT -->
-
-                <div class="chat-controls">
-
-                    <select id="targetDevice">
-
-                        <option value="all">📢 Todos</option>
-
-                    </select>
-
-                </div>
-
                 <section class="chat-section">
 
                     <div class="chat-header">
@@ -57,7 +60,7 @@
                     <div class="chat-input">
 
                         <input type="text" id="messageInput" placeholder="Digite uma mensagem...">
-                        <button onclick="sendMessage()"> Enviar</button>
+                        <button type="button" onclick="sendMessage()"> Enviar</button>
 
                     </div>
 
@@ -73,8 +76,8 @@
 
                     <div class="files-content">
 
-                        <input type="file" id="fileInput">
-                        <button onclick="uploadFile()"> Enviar Arquivo</button>
+                        <input type="file" id="fileInput" placeholder="Escolher Arquivos">
+                        <button type="button" onclick="uploadFile()">Enviar Arquivo</button>
 
                         <div id="uploadedFiles"></div>
 
@@ -83,8 +86,6 @@
             </div>
         </main>
     </div>
-
-    <script type="module" src="./js/comunicacao.js"></script>
 
 </body>
 

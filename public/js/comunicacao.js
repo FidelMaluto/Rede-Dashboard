@@ -1,15 +1,11 @@
 import ws from './websocket.js';
 
-const deviceName =
-    localStorage.getItem('deviceName') || 'Dispositivo';
+const deviceName = localStorage.getItem('deviceName') || 'Dispositivo';
 
 // Controla quando a lista de dispositivos muda
 let totalDevices = 0;
 
-// ===============================
 // ENVIAR MENSAGEM
-// ===============================
-
 window.sendMessage = function () {
 
     const input = document.getElementById("messageInput");
@@ -20,11 +16,8 @@ window.sendMessage = function () {
     ws.send(JSON.stringify({
 
         type: "chat",
-
         deviceName,
-
         target: target.value,
-
         text: input.value.trim()
 
     }));
@@ -33,14 +26,10 @@ window.sendMessage = function () {
 
 };
 
-// ===============================
 // ENVIAR ARQUIVO
-// ===============================
-
 window.uploadFile = async function () {
 
-    const file =
-        document.getElementById("fileInput").files[0];
+    const file = document.getElementById("fileInput").files[0];
 
     if (!file) return;
 
@@ -51,86 +40,52 @@ window.uploadFile = async function () {
     await fetch("/upload", {
 
         method: "POST",
-
         body: formData
 
     });
 
 };
 
-// ===============================
 // RECEBER DADOS
-// ===============================
-
 ws.addEventListener("message", (event) => {
 
     const data = JSON.parse(event.data);
 
-    // ==========================
     // CHAT
-    // ==========================
-
     if (data.type === "chat") {
 
-        const messages =
-            document.getElementById("messages");
+        const messages = document.getElementById("messages");
 
         messages.innerHTML += `
 
             <div class="message">
 
-                <strong>
+                <strong>${data.sender}</strong>
 
-                    ${data.sender}
+                <small>${data.time}</small>
 
-                </strong>
-
-                <small>
-
-                    ${data.time}
-
-                </small>
-
-                <p>
-
-                    ${data.text}
-
-                </p>
+                <p>${data.text}</p>
 
             </div>
 
         `;
 
-        messages.scrollTop =
-            messages.scrollHeight;
+        messages.scrollTop = messages.scrollHeight;
 
         return;
 
     }
 
-    // ==========================
     // ARQUIVOS
-    // ==========================
-
     if (data.type === "file") {
 
-        const uploadedFiles =
-            document.getElementById("uploadedFiles");
+        const uploadedFiles = document.getElementById("uploadedFiles");
 
         uploadedFiles.innerHTML += `
 
             <div class="file-item">
 
-                📄
-
-                <a
-                    href="/uploads/${data.filename}"
-                    target="_blank"
-                >
-
-                    ${data.filename}
-
-                </a>
+                <a href="/uploads/${data.filename}" target="_blank">${data.filename}</a>
 
             </div>
 
@@ -140,90 +95,70 @@ ws.addEventListener("message", (event) => {
 
     }
 
-    // ==========================
     // DISPOSITIVOS
-    // ==========================
-
     if (data.devices) {
 
         if (data.devices.length !== totalDevices) {
 
             totalDevices = data.devices.length;
 
-            const select =
-                document.getElementById("targetDevice");
+            const select = document.getElementById("targetDevice");
 
             const atual = select.value;
 
-            select.innerHTML =
-                '<option value="all">📢 Todos</option>';
+            select.innerHTML = '<option value="all">Todos</option>';
 
             data.devices.forEach(device => {
 
                 select.innerHTML += `
 
-                    <option value="${device.ip}">
-
-                        ${device.name} (${device.type})
-
-                    </option>
+                    <option value="${device.ip}">${device.name} (${device.type})</option>
 
                 `;
 
             });
 
-            if (
-                [...select.options]
-                    .find(o => o.value === atual)
-            ) {
+            if ([...select.options].find(o => o.value === atual)) {
 
                 select.value = atual;
 
             }
-
         }
-
     }
 
 });
 
-wss.on("connection", (ws, req) => {
+// // Conexão WS
+// const wss = new WebSocketServer({ port: 3000 });
 
-    ws.clientIp =
-        req.socket.remoteAddress.replace("::ffff:", "");
+// wss.on("connection", (ws, req) => {
 
-    // restante código...
+//     ws.clientIp = req.socket.remoteAddress.replace("::ffff:", "");
 
-});
+//     console.log("Cliente conectado");
 
-// Envio de sms privada
-if (data.type === "chat") {
+// });
 
-    wss.clients.forEach(client => {
+// // Envio de sms privada
+// if (data.type === "chat") {
 
-        if (client.readyState !== WebSocket.OPEN)
-            return;
+//     wss.clients.forEach(client => {
 
-        if (
-            data.target === "all" ||
-            client.clientIp === data.target ||
-            client.clientIp === ws.clientIp
-        ) {
+//         if (client.readyState !== WebSocket.OPEN) return;
 
-            client.send(JSON.stringify({
+//         if (data.target === "all" || client.clientIp === data.target || client.clientIp === ws.clientIp) {
 
-                type: "chat",
+//             client.send(JSON.stringify({
 
-                sender: data.deviceName,
+//                 type: "chat",
+//                 sender: data.deviceName,
+//                 text: data.text,
+//                 time: new Date().toLocaleTimeString()
 
-                text: data.text,
+//             }));
 
-                time: new Date().toLocaleTimeString()
+//         }
 
-            }));
+//     });
 
-        }
-
-    });
-
-}
+// }

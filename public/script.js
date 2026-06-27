@@ -16,12 +16,9 @@ function getDeviceName() {
 const deviceName = localStorage.getItem("deviceName") || getDeviceName();
 
 function generateFakeMac() {
-    return "XX:XX:XX:XX:XX:XX"
-        .replace(/X/g, () => {
+    return "XX:XX:XX:XX:XX:XX".replace(/X/g, () => {
 
-            return Math.floor(
-                Math.random() * 16
-            ).toString(16);
+            return Math.floor(Math.random() * 16 ).toString(16);
 
         });
 }
@@ -80,16 +77,13 @@ ws.onmessage = (event) => {
     // ARQUIVOS
     if (data.type === 'file') {
 
-        const uploadedFiles =
-            document.getElementById('uploadedFiles');
+        const uploadedFiles = document.getElementById('uploadedFiles');
 
         uploadedFiles.innerHTML += `
 
         <div class="file-item">
-
-            <a href="/uploads/${data.filename}" target="_blank">
-                ${data.filename}
-            </ahref=>
+            
+            <a href="/uploads/${data.filename}" target="_blank">${data.filename}</a>
 
         </div>
 
@@ -140,7 +134,6 @@ ws.onmessage = (event) => {
                         <td class="online">${device.status}</td>
                     </tr>
                 `;
-
     });
 
     // GRÁFICO
@@ -148,8 +141,10 @@ ws.onmessage = (event) => {
     trafficChart.data.datasets[0].data.push(data.total);
 
     if (trafficChart.data.labels.length > 10) {
+
         trafficChart.data.labels.shift();
         trafficChart.data.datasets[0].data.shift();
+
     }
 
     trafficChart.update();
@@ -163,9 +158,11 @@ function sendMessage() {
     if (!input.value) return;
 
     ws.send(JSON.stringify({
+
         type: 'chat',
         deviceName,
         text: input.value
+
     }));
 
     input.value = '';
