@@ -42,10 +42,8 @@ const ctx = document.getElementById('trafficChart');
 const trafficChart = new Chart(ctx, {
 
     type: 'line',
-
     data: {
         labels: [],
-
         datasets: [{
             label: 'Dispositivos Conectados',
             data: [],
