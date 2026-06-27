@@ -50,7 +50,7 @@ wss.on('connection', (ws, req) => {
                 exists.name = data.deviceName;
                 exists.type = data.deviceType;
                 exists.mac = data.mac;
-                
+
             } else {
                 devices.push({
                     name: data.deviceName,
